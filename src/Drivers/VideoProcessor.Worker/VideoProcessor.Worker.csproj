@@ -10,4 +10,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\VideoProcessor.Application\VideoProcessor.Application.csproj" />
+    <ProjectReference Include="..\..\Core\VideoProcessor.Domain\VideoProcessor.Domain.csproj" />
+    <ProjectReference Include="..\..\Drivens\VideoProcessor.Data.S3\VideoProcessor.Data.S3.csproj" />
+    <ProjectReference Include="..\..\Drivens\VideoProcessor.FFMPEG\VideoProcessor.FFMPEG.csproj" />
+    <ProjectReference Include="..\..\Drivens\VideoProcessor.Messaging.SQS\VideoProcessor.Messaging.SQS.csproj" />
+  </ItemGroup>
 </Project>
