@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.IO.Compression;
-using VideoProcessor.Domain.Entities;
+using VideoProcessor.Application.Services;
 using VideoProcessor.Domain.Enums;
 using VideoProcessor.Domain.Ports;
 
@@ -11,17 +10,20 @@ namespace VideoProcessor.Application.UseCases
         private readonly IFileManager fileManager;
         private readonly IVideoProcessingLibrary videoProcessingLibrary;
         private readonly IVideoManagerClient managerClient;
+        private readonly ICompressionService compressionService;
         private readonly ILogger<ExtractVideoImagesToZipUseCase> logger;
 
         public ExtractVideoImagesToZipUseCase(IFileManager fileManager,
                                               IVideoProcessingLibrary videoProcessingLibrary,
                                               IVideoManagerClient managerClient,
+                                              ICompressionService compressionService,
                                               ILogger<ExtractVideoImagesToZipUseCase> logger)
 
         {
             this.fileManager = fileManager;
             this.videoProcessingLibrary = videoProcessingLibrary;
             this.managerClient = managerClient;
+            this.compressionService = compressionService;
             this.logger = logger;
         }
 
@@ -36,7 +38,7 @@ namespace VideoProcessor.Application.UseCases
                 var images = await videoProcessingLibrary.ExtractImagesAsync(videoFile);
 
                 var zipFileName = $"{userEmail}_{videoIdentifier}.zip";
-                var zipFile = CreateZipFile(images, zipFileName);
+                var zipFile = compressionService.CreateZipFile(images, zipFileName);
 
                 await fileManager.SaveNewFileAsync(zipFile);
 
@@ -50,27 +52,6 @@ namespace VideoProcessor.Application.UseCases
                 // TO DO
                 // send email to user with failure
             }
-        }
-
-        private static BinaryFile CreateZipFile(IEnumerable<BinaryFile> imageFiles, string outputZipFileName)
-        {
-            using var zipFileStream = new MemoryStream();
-            var zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create);
-
-            foreach (var imageFile in imageFiles)
-            {
-                var zipEntry = zipArchive.CreateEntry(imageFile.Identifier);
-                using var imageFileStream = new MemoryStream(imageFile.File);
-                using var zipFileEntryStream = zipEntry.Open();
-
-                imageFileStream.CopyTo(zipFileEntryStream);
-            }
-
-            return new BinaryFile()
-            {
-                Identifier = outputZipFileName,
-                File = zipFileStream.ToArray()
-            };
         }
     }
 }
