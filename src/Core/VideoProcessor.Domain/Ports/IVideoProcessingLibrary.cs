@@ -5,6 +5,6 @@ namespace VideoProcessor.Domain.Ports
 {
     public interface IVideoProcessingLibrary
     {
-        Task<IEnumerable<BinaryFile>> ExtractImagesAsync(BinaryFile videoFile);
+        Task<IEnumerable<ImageFile>> ExtractImagesAsync(ProcessFile videoFile);
     }
 }

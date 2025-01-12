@@ -24,10 +24,10 @@ var videoProcessingLibrary = sp.GetRequiredService<IVideoProcessingLibrary>();
 const string filePath = "Files/Marvel_DOTNET_CSHARP.mp4";
 var videoBytes = File.ReadAllBytes($"./{filePath}");
 
-var videoFile = new BinaryFile()
+var videoFile = new ProcessFile()
 {
     Identifier = Path.GetFileName(filePath),
-    File = videoBytes
+    Content = videoBytes
 };
 
 var imageFiles = await videoProcessingLibrary.ExtractImagesAsync(videoFile);
@@ -37,7 +37,7 @@ if (!Directory.Exists("./images"))
 
 foreach (var file in imageFiles)
 {
-    await File.WriteAllBytesAsync($"./images/{file.Identifier}", file.File);
+    await File.WriteAllBytesAsync($"./images/{file.Identifier}", file.Content);
 }
 
 Console.WriteLine("Done!");

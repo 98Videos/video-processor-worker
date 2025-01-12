@@ -1,53 +1,48 @@
 ﻿using Microsoft.Extensions.Logging;
-using VideoProcessor.Application.Services;
-using VideoProcessor.Domain.Enums;
+using VideoProcessor.Domain.Entities;
 using VideoProcessor.Domain.Ports;
 
 namespace VideoProcessor.Application.UseCases
 {
     public class ExtractVideoImagesToZipUseCase
     {
-        private readonly IFileManager fileManager;
+        private readonly IFileRepository fileRepository;
         private readonly IVideoProcessingLibrary videoProcessingLibrary;
         private readonly IVideoManagerClient managerClient;
-        private readonly ICompressionService compressionService;
         private readonly ILogger<ExtractVideoImagesToZipUseCase> logger;
 
-        public ExtractVideoImagesToZipUseCase(IFileManager fileManager,
+        public ExtractVideoImagesToZipUseCase(IFileRepository fileRepository,
                                               IVideoProcessingLibrary videoProcessingLibrary,
                                               IVideoManagerClient managerClient,
-                                              ICompressionService compressionService,
                                               ILogger<ExtractVideoImagesToZipUseCase> logger)
 
         {
-            this.fileManager = fileManager;
+            this.fileRepository = fileRepository;
             this.videoProcessingLibrary = videoProcessingLibrary;
             this.managerClient = managerClient;
-            this.compressionService = compressionService;
             this.logger = logger;
         }
 
         public async Task Execute(string videoIdentifier, string userEmail)
         {
+            logger.LogInformation("Processing video {videoId}", videoIdentifier);
+
             try
             {
-                logger.LogInformation("Processing video {videoId}", videoIdentifier);
-
-                var videoFile = await fileManager.GetFileAsync(userEmail, videoIdentifier);
+                var videoFile = await fileRepository.GetVideoFile(userEmail, videoIdentifier);
 
                 var images = await videoProcessingLibrary.ExtractImagesAsync(videoFile);
 
-                var zipFileName = $"{userEmail}_{videoIdentifier}.zip";
-                var zipFile = compressionService.CreateZipFile(images, zipFileName);
+                var zipFile = ZipFile.Create(images);
 
-                await fileManager.SaveNewFileAsync(zipFile);
+                await fileRepository.SaveZipFile(userEmail, zipFile);
 
-                await managerClient.NotifyNewVideoStatusAsync(videoIdentifier, VideoStatus.Success);
+                await managerClient.NotifyProcessingSuccess(videoIdentifier);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Could not process video");
-                await managerClient.NotifyNewVideoStatusAsync(videoIdentifier, VideoStatus.Failed);
+                await managerClient.NotifyProcessingFailure(videoIdentifier);
 
                 // TO DO
                 // send email to user with failure

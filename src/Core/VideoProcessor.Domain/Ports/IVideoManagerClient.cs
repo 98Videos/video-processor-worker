@@ -1,9 +1,9 @@
-﻿using VideoProcessor.Domain.Enums;
-
-namespace VideoProcessor.Domain.Ports
+﻿namespace VideoProcessor.Domain.Ports
 {
     public interface IVideoManagerClient
     {
-        Task NotifyNewVideoStatusAsync(string videoIdentifier, VideoStatus videoProcessingStatus);
+        Task NotifyProcessingSuccess(string videoIdentifier);
+
+        Task NotifyProcessingFailure(string videoIdentifier);
     }
 }

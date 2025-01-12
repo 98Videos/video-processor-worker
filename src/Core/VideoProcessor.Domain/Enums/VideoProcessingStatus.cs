@@ -1,8 +1,8 @@
 ﻿namespace VideoProcessor.Domain.Enums
 {
-    public enum VideoStatus
+    public enum VideoProcessingStatus
     {
-        Processing,
+        Pending,
         Success,
         Failed
     }

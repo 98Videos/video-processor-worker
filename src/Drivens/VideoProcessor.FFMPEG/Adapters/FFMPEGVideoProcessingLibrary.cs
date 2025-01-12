@@ -18,8 +18,7 @@ namespace VideoProcessor.FFMPEG.Adapters
             GlobalFFOptions.Current.BinaryFolder = "LibraryBinaries";
         }
 
-        // TODO: Use filePath instead of receiving videoFile
-        public async Task<IEnumerable<BinaryFile>> ExtractImagesAsync(BinaryFile videoFile)
+        public async Task<IEnumerable<ImageFile>> ExtractImagesAsync(ProcessFile videoFile)
         {
             string videoPath = Path.Combine(Path.GetTempPath(), videoFile.Identifier);
             string outputDirectory = Path.Combine(Path.GetTempPath(), "frames");
@@ -29,7 +28,7 @@ namespace VideoProcessor.FFMPEG.Adapters
                 if (!Directory.Exists(outputDirectory))
                     Directory.CreateDirectory(outputDirectory);
 
-                await File.WriteAllBytesAsync(videoPath, videoFile.File);
+                await File.WriteAllBytesAsync(videoPath, videoFile.Content);
 
                 var videoInfo = await FFProbe.AnalyseAsync(videoPath);
                 var videoDuration = videoInfo.Duration;
@@ -45,16 +44,12 @@ namespace VideoProcessor.FFMPEG.Adapters
                 }
 
                 var allImageFiles = Directory.GetFiles(outputDirectory);
-                var imageFileList = new List<BinaryFile>();
+                var imageFileList = new List<ImageFile>();
 
                 foreach (var imageFilePath in allImageFiles)
                 {
                     var imageFileBytes = await File.ReadAllBytesAsync(imageFilePath);
-                    imageFileList.Add(new BinaryFile()
-                    {
-                        Identifier = Path.GetFileName(imageFilePath),
-                        File = imageFileBytes
-                    });
+                    imageFileList.Add(new ImageFile(Path.GetFileName(imageFilePath), imageFileBytes, videoFile.Identifier));
 
                     File.Delete(imageFilePath);
                 }
