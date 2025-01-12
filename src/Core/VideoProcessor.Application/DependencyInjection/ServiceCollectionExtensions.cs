@@ -7,7 +7,7 @@ namespace VideoProcessor.Application.DependencyInjection
     {
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
-            services.AddSingleton(typeof(ExtractVideoImagesToZipUseCase));
+            services.AddScoped(typeof(ExtractVideoImagesToZipUseCase));
 
             return services;
         }

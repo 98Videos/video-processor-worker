@@ -1,10 +1,10 @@
 namespace VideoProcessor.Worker
 {
-    public class Worker : BackgroundService
+    public class VideoProcessingWorker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<VideoProcessingWorker> _logger;
 
-        public Worker(ILogger<Worker> logger)
+        public VideoProcessingWorker(ILogger<VideoProcessingWorker> logger)
         {
             _logger = logger;
         }

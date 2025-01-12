@@ -26,6 +26,8 @@ namespace VideoProcessor.Data.S3.Adapters
         {
             try
             {
+                logger.LogInformation("Downloading video file from s3...");
+
                 var s3Response = await s3Client.GetObjectAsync(options.VideosBucket, $"{userEmail}/{fileIdentifier}");
 
                 using var fileStream = s3Response.ResponseStream;
@@ -33,6 +35,7 @@ namespace VideoProcessor.Data.S3.Adapters
 
                 await fileStream.CopyToAsync(memoryStream);
 
+                logger.LogInformation("file {fileIdentifier} downloaded", $"{userEmail}/{fileIdentifier}");
                 return new VideoFile(fileIdentifier, memoryStream.ToArray());
             }
             catch (Exception e)
@@ -47,10 +50,14 @@ namespace VideoProcessor.Data.S3.Adapters
             await File.WriteAllBytesAsync($"./{file.Identifier}", file.Content);
             using var fileStream = new MemoryStream(file.Content);
 
+            logger.LogInformation("Saving zip file to S3...");
+
             await s3Client.UploadObjectFromStreamAsync(options.ZipFilesBucket,
                                                        $"{userEmail}/{file.Identifier}",
                                                        fileStream,
                                                        additionalProperties: null);
+
+            logger.LogInformation("zip file saved successfuly");
         }
     }
 }

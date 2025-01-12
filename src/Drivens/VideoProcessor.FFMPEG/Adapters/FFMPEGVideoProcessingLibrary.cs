@@ -37,7 +37,7 @@ namespace VideoProcessor.FFMPEG.Adapters
 
                 for (var currentTime = TimeSpan.Zero; currentTime < videoDuration; currentTime += TimeSpan.FromSeconds(intervalSeconds))
                 {
-                    logger.LogInformation("Processing frame {hour}:{minute}:{second}", currentTime.Hours, currentTime.Minutes, currentTime.Seconds);
+                    logger.LogInformation("Processing frame {time}", $"{currentTime.Hours:D2}:{currentTime.Minutes:D2}:{currentTime.Seconds:D2}");
 
                     var outputPath = Path.Combine(outputDirectory, $"frame_at_{currentTime.TotalSeconds}.jpg");
                     await FFMpeg.SnapshotAsync(videoPath, outputPath, new Size(1920, 1080), currentTime);
