@@ -46,10 +46,13 @@ namespace VideoProcessor.FFMPEG.Adapters
                 var allImageFiles = Directory.GetFiles(outputDirectory);
                 var imageFileList = new List<ImageFile>();
 
+                var originalVideoIdentifier = Path.GetFileNameWithoutExtension(videoFile.Identifier);
                 foreach (var imageFilePath in allImageFiles)
                 {
                     var imageFileBytes = await File.ReadAllBytesAsync(imageFilePath);
-                    imageFileList.Add(new ImageFile(Path.GetFileName(imageFilePath), imageFileBytes, videoFile.Identifier));
+                    var fileName = Path.GetFileName(imageFilePath);
+
+                    imageFileList.Add(new ImageFile(fileName, imageFileBytes, originalVideoIdentifier));
 
                     File.Delete(imageFilePath);
                 }
