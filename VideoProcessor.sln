@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{CC5DE65A-9932-49FC-9F6E-FE580C4E2DFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drivers", "Drivers", "{AF9CBB65-FC60-47EC-AC97-568B63B4C795}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drivens", "Drivens", "{75075B10-3CA5-4976-87C1-6667DF2DFF4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FDD1AE7F-6875-463A-A29D-D84B3E71F904}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Domain", "src\Core\VideoProcessor.Domain\VideoProcessor.Domain.csproj", "{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Worker", "src\Drivers\VideoProcessor.Worker\VideoProcessor.Worker.csproj", "{B014FC52-8391-4456-993B-663E692B2935}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Data.S3", "src\Drivens\VideoProcessor.Data.S3\VideoProcessor.Data.S3.csproj", "{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Application", "src\Core\VideoProcessor.Application\VideoProcessor.Application.csproj", "{5898A069-6416-4AB9-B884-EA843D6E304C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Application.UnitTests", "test\VideoProcessor.Application.UnitTests\VideoProcessor.Application.UnitTests.csproj", "{FEAE24C9-DEE8-4978-9286-A02496A35C7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.FFMPEG", "src\Drivens\VideoProcessor.FFMPEG\VideoProcessor.FFMPEG.csproj", "{4216DA4A-2150-4BC1-A11E-68E82D52AEBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{703C4773-9AD4-4AA2-8871-88E827BFBC24}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Clients.VideoManager", "src\Drivens\VideoProcessor.Clients.VideoManager\VideoProcessor.Clients.VideoManager.csproj", "{7EF252E7-0431-45E1-B881-6BE6971A9A4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B014FC52-8391-4456-993B-663E692B2935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B014FC52-8391-4456-993B-663E692B2935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B014FC52-8391-4456-993B-663E692B2935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B014FC52-8391-4456-993B-663E692B2935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5898A069-6416-4AB9-B884-EA843D6E304C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5898A069-6416-4AB9-B884-EA843D6E304C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5898A069-6416-4AB9-B884-EA843D6E304C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5898A069-6416-4AB9-B884-EA843D6E304C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEAE24C9-DEE8-4978-9286-A02496A35C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEAE24C9-DEE8-4978-9286-A02496A35C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEAE24C9-DEE8-4978-9286-A02496A35C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEAE24C9-DEE8-4978-9286-A02496A35C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF252E7-0431-45E1-B881-6BE6971A9A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF252E7-0431-45E1-B881-6BE6971A9A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF252E7-0431-45E1-B881-6BE6971A9A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF252E7-0431-45E1-B881-6BE6971A9A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5733872F-6A5E-40F9-8E11-D9A6F5CB07F4} = {CC5DE65A-9932-49FC-9F6E-FE580C4E2DFC}
+		{B014FC52-8391-4456-993B-663E692B2935} = {AF9CBB65-FC60-47EC-AC97-568B63B4C795}
+		{9D88E81D-F4D6-4994-BA13-FEEA7C243F0B} = {75075B10-3CA5-4976-87C1-6667DF2DFF4F}
+		{5898A069-6416-4AB9-B884-EA843D6E304C} = {CC5DE65A-9932-49FC-9F6E-FE580C4E2DFC}
+		{FEAE24C9-DEE8-4978-9286-A02496A35C7B} = {FDD1AE7F-6875-463A-A29D-D84B3E71F904}
+		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC} = {75075B10-3CA5-4976-87C1-6667DF2DFF4F}
+		{7EF252E7-0431-45E1-B881-6BE6971A9A4C} = {75075B10-3CA5-4976-87C1-6667DF2DFF4F}
+	EndGlobalSection
+EndGlobal
