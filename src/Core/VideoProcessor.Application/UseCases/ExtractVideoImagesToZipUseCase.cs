@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using VideoProcessor.Domain.Entities;
 using VideoProcessor.Domain.Ports;
+using VideoProcessor.Domain.ValueObjects;
 
 namespace VideoProcessor.Application.UseCases
 {
@@ -8,7 +9,7 @@ namespace VideoProcessor.Application.UseCases
     {
         private readonly IFileRepository fileRepository;
         private readonly IVideoProcessingLibrary videoProcessingLibrary;
-        private readonly IVideoManagerClient managerClient;
+        private readonly IVideoManagerClient videoManagerClient;
         private readonly ILogger<ExtractVideoImagesToZipUseCase> logger;
 
         public ExtractVideoImagesToZipUseCase(IFileRepository fileRepository,
@@ -19,11 +20,11 @@ namespace VideoProcessor.Application.UseCases
         {
             this.fileRepository = fileRepository;
             this.videoProcessingLibrary = videoProcessingLibrary;
-            this.managerClient = managerClient;
+            this.videoManagerClient = managerClient;
             this.logger = logger;
         }
 
-        public async Task Execute(string videoIdentifier, string userEmail)
+        public async Task<Result> Execute(string videoIdentifier, string userEmail)
         {
             logger.LogInformation("Processing video {videoId}", videoIdentifier);
 
@@ -37,15 +38,21 @@ namespace VideoProcessor.Application.UseCases
 
                 await fileRepository.SaveZipFile(userEmail, zipFile);
 
-                await managerClient.NotifyProcessingSuccess(videoIdentifier);
+                await videoManagerClient.NotifyProcessingSuccess(videoIdentifier);
+
+                return new SuccessResult();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Could not process video");
-                await managerClient.NotifyProcessingFailure(videoIdentifier);
+                const string errorMessage = "Could not process video";
+
+                logger.LogError(ex, errorMessage);
+                await videoManagerClient.NotifyProcessingFailure(videoIdentifier);
 
                 // TO DO
                 // send email to user with failure
+
+                return new FailureResult(errorMessage);
             }
         }
     }
