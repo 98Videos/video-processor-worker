@@ -10,17 +10,18 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
 {
     public class ExtractVideoImagesToZipUseCaseTests
     {
-        private readonly Mock<IFileRepository> _fileRepositoryMock;
-        private readonly Mock<IVideoProcessingLibrary> _videoProcessingLibraryMock;
-        private readonly Mock<IVideoManagerClient> _videoManagerClientMock;
-        private readonly Mock<ILogger<ExtractVideoImagesToZipUseCase>> _loggerMock;
+        private Mock<IFileRepository> _fileRepositoryMock = new();
+        private Mock<IVideoProcessingLibrary> _videoProcessingLibraryMock = new();
+        private Mock<IVideoManagerClient> _videoManagerClientMock = new();
+        private Mock<ILogger<ExtractVideoImagesToZipUseCase>> _loggerMock = new();
 
-        public ExtractVideoImagesToZipUseCaseTests()
+        [SetUp]
+        public void SetUp()
         {
-            _fileRepositoryMock = new Mock<IFileRepository>();
-            _videoProcessingLibraryMock = new Mock<IVideoProcessingLibrary>();
-            _videoManagerClientMock = new Mock<IVideoManagerClient>();
-            _loggerMock = new Mock<ILogger<ExtractVideoImagesToZipUseCase>>();
+            _fileRepositoryMock = new();
+            _videoProcessingLibraryMock = new();
+            _videoManagerClientMock = new();
+            _loggerMock = new();
         }
 
         [Test]
