@@ -6,7 +6,7 @@ using VideoProcessor.Application.UseCases;
 using VideoProcessor.Domain.Entities;
 using VideoProcessor.Domain.Ports;
 
-namespace VideoProcessor.Application.UnitTests.UseCases
+namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
 {
     public class ExtractVideoImagesToZipUseCaseTests
     {
