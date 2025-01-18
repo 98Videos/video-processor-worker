@@ -1,5 +1,4 @@
-using Amazon.SimpleNotificationService;
-using Amazon.SQS;
+using Amazon.Runtime;
 using MassTransit;
 using VideoProcessor.Application.DependencyInjection;
 using VideoProcessor.Clients.VideoManager.DependencyInjection;
@@ -20,14 +19,9 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingAmazonSqs((context, cfg) =>
     {
-        // TODO: Update to real AWS instead of local stack
-        cfg.Host(new Uri("amazonsqs://localhost:4566"), h =>
+        cfg.Host("us-east-1", h =>
         {
-            h.AccessKey("admin");
-            h.SecretKey("admin");
-
-            h.Config(new AmazonSQSConfig { ServiceURL = "http://localhost:4566" });
-            h.Config(new AmazonSimpleNotificationServiceConfig { ServiceURL = "http://localhost:4566" });
+            h.Credentials(new EnvironmentVariablesAWSCredentials());
         });
 
         cfg.ReceiveEndpoint("videos-to-process", e =>
