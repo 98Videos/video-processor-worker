@@ -1,4 +1,5 @@
 ﻿using VideoProcessor.Domain.Entities;
+using VideoProcessor.Domain.ValueObjects;
 
 namespace VideoProcessor.Domain.Ports
 {
@@ -6,6 +7,6 @@ namespace VideoProcessor.Domain.Ports
     {
         Task<VideoFile> GetVideoFile(string userEmail, string fileIdentifier);
 
-        Task SaveZipFile(string userEmail, ZipFile file);
+        Task<Result> SaveZipFile(string userEmail, ZipFile file);
     }
 }

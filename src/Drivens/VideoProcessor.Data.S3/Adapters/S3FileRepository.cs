@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using VideoProcessor.Data.S3.Options;
 using VideoProcessor.Domain.Entities;
 using VideoProcessor.Domain.Ports;
+using VideoProcessor.Domain.ValueObjects;
 
 namespace VideoProcessor.Data.S3.Adapters
 {
@@ -36,7 +37,9 @@ namespace VideoProcessor.Data.S3.Adapters
                 await fileStream.CopyToAsync(memoryStream);
 
                 logger.LogInformation("file {fileIdentifier} downloaded", $"{userEmail}/{fileIdentifier}");
-                return new VideoFile(fileIdentifier, memoryStream.ToArray());
+
+                var videoFile = new VideoFile(fileIdentifier, memoryStream.ToArray());
+                return videoFile;
             }
             catch (Exception e)
             {
@@ -45,19 +48,29 @@ namespace VideoProcessor.Data.S3.Adapters
             }
         }
 
-        public async Task SaveZipFile(string userEmail, ZipFile file)
+        public async Task<Result> SaveZipFile(string userEmail, ZipFile zipFile)
         {
-            await File.WriteAllBytesAsync($"./{file.Identifier}", file.Content);
-            using var fileStream = new MemoryStream(file.Content);
+            try
+            {
+                await File.WriteAllBytesAsync($"./{zipFile.Identifier}", zipFile.Content);
+                using var fileStream = new MemoryStream(zipFile.Content);
 
-            logger.LogInformation("Saving zip file to S3...");
+                logger.LogInformation("Saving zip file to S3...");
 
-            await s3Client.UploadObjectFromStreamAsync(options.ZipFilesBucket,
-                                                       $"{userEmail}/{file.Identifier}",
-                                                       fileStream,
-                                                       additionalProperties: null);
+                await s3Client.UploadObjectFromStreamAsync(options.ZipFilesBucket,
+                                                           $"{userEmail}/{zipFile.Identifier}",
+                                                           fileStream,
+                                                           additionalProperties: null);
 
-            logger.LogInformation("zip file saved successfuly");
+                logger.LogInformation("zip file saved successfuly");
+
+                return new SuccessResult();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "could not upload object {zipFile} for user {userEmail}", zipFile.Identifier, userEmail);
+                throw;
+            }
         }
     }
 }

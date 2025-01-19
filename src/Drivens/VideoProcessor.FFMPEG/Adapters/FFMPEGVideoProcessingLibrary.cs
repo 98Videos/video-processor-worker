@@ -18,7 +18,7 @@ namespace VideoProcessor.FFMPEG.Adapters
             GlobalFFOptions.Current.BinaryFolder = "LibraryBinaries";
         }
 
-        public async Task<IEnumerable<ImageFile>> ExtractImagesAsync(ProcessFile videoFile)
+        public async Task<IEnumerable<ImageFile>> ExtractImagesAsync(VideoFile videoFile)
         {
             string videoPath = Path.Combine(Path.GetTempPath(), videoFile.Identifier);
             string outputDirectory = Path.Combine(Path.GetTempPath(), "frames");
