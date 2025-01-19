@@ -31,6 +31,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcessor.Clients.VideoManager", "src\Drivens\VideoProcessor.Clients.VideoManager\VideoProcessor.Clients.VideoManager.csproj", "{7EF252E7-0431-45E1-B881-6BE6971A9A4C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".kubernetes", ".kubernetes", "{AA39075E-BA24-49B6-A282-E0B057E3A0CD}"
+	ProjectSection(SolutionItems) = preProject
+		.kubernetes\deployment.yaml = .kubernetes\deployment.yaml
+		.kubernetes\hpa.yaml = .kubernetes\hpa.yaml
+		.kubernetes\secrets.yaml = .kubernetes\secrets.yaml
+		.kubernetes\service.yaml = .kubernetes\service.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,5 +85,6 @@ Global
 		{FEAE24C9-DEE8-4978-9286-A02496A35C7B} = {FDD1AE7F-6875-463A-A29D-D84B3E71F904}
 		{4216DA4A-2150-4BC1-A11E-68E82D52AEBC} = {75075B10-3CA5-4976-87C1-6667DF2DFF4F}
 		{7EF252E7-0431-45E1-B881-6BE6971A9A4C} = {75075B10-3CA5-4976-87C1-6667DF2DFF4F}
+		{AA39075E-BA24-49B6-A282-E0B057E3A0CD} = {703C4773-9AD4-4AA2-8871-88E827BFBC24}
 	EndGlobalSection
 EndGlobal
