@@ -4,30 +4,28 @@ namespace VideoProcessor.Domain.Entities
 {
     public record ZipFile : ProcessFile
     {
-        private ZipFile(string identifier, byte[] content) : base(identifier, content)
+        private ZipFile(string identifier, Stream fileStreamReference) : base(identifier, fileStreamReference)
         {
         }
 
         public static ZipFile Create(IEnumerable<ImageFile> files)
         {
-            using (var zipFileStream = new MemoryStream())
+            var zipFileStream = new MemoryStream();
+            using (var zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Update, true))
             {
-                using (var zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Update, true))
+                foreach (var imageFile in files)
                 {
-                    foreach (var imageFile in files)
-                    {
-                        var zipEntry = zipArchive.CreateEntry(imageFile.Identifier);
-                        using var zipFileEntryStream = zipEntry.Open();
-                        using var imageFileStream = new MemoryStream(imageFile.Content);
+                    var zipEntry = zipArchive.CreateEntry(imageFile.Identifier);
+                    using var zipFileEntryStream = zipEntry.Open();
 
-                        imageFileStream.CopyTo(zipFileEntryStream);
-                    }
-                };
+                    imageFile.FileStreamReference.CopyTo(zipFileEntryStream);
+                    imageFile.FileStreamReference.Dispose();
+                }
+            };
 
-                var originalVideoIdentifier = $"{files.First().OriginalVideoIdentifier}_thumbs";
+            var originalVideoIdentifier = $"{files.First().OriginalVideoIdentifier}_thumbs";
 
-                return new ZipFile($"{originalVideoIdentifier}.zip", zipFileStream.ToArray());
-            }
+            return new ZipFile($"{originalVideoIdentifier}.zip", zipFileStream);
         }
     }
 }

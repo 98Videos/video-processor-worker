@@ -28,7 +28,11 @@ namespace VideoProcessor.FFMPEG.Adapters
                 if (!Directory.Exists(outputDirectory))
                     Directory.CreateDirectory(outputDirectory);
 
-                await File.WriteAllBytesAsync(videoPath, videoFile.Content);
+                using (var diskVideoFileStream = File.Create(videoPath))
+                {
+                    videoFile.FileStreamReference.CopyTo(diskVideoFileStream);
+                    videoFile.FileStreamReference.Dispose();
+                }
 
                 var videoInfo = await FFProbe.AnalyseAsync(videoPath);
                 var videoDuration = videoInfo.Duration;
@@ -49,10 +53,12 @@ namespace VideoProcessor.FFMPEG.Adapters
                 var originalVideoIdentifier = Path.GetFileNameWithoutExtension(videoFile.Identifier);
                 foreach (var imageFilePath in allImageFiles)
                 {
-                    var imageFileBytes = await File.ReadAllBytesAsync(imageFilePath);
+                    var bytes = File.ReadAllBytes(imageFilePath);
+                    var imageFileStream = new MemoryStream(bytes);
+
                     var fileName = Path.GetFileName(imageFilePath);
 
-                    imageFileList.Add(new ImageFile(fileName, imageFileBytes, originalVideoIdentifier));
+                    imageFileList.Add(new ImageFile(fileName, imageFileStream, originalVideoIdentifier));
 
                     File.Delete(imageFilePath);
                 }

@@ -37,7 +37,10 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
                 .Setup(x => x.GetVideoFile(userEmail, videoIdentifier))
                 .ReturnsAsync(videoFile);
 
-            var images = new AutoFaker<ImageFile>().Generate(3);
+            var images = new AutoFaker<ImageFile>()
+                .RuleFor(x => x.FileStreamReference, f => new MemoryStream(f.Random.Bytes(5)))
+                .Generate(3);
+
             _videoProcessingLibraryMock
                 .Setup(x => x.ExtractImagesAsync(videoFile))
                 .ReturnsAsync(images);
@@ -67,7 +70,10 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
                 .Setup(x => x.GetVideoFile(userEmail, videoIdentifier))
                 .ReturnsAsync(videoFile);
 
-            var images = new AutoFaker<ImageFile>().Generate(3);
+            var images = new AutoFaker<ImageFile>()
+                .RuleFor(x => x.FileStreamReference, f => new MemoryStream(f.Random.Bytes(5)))
+                .Generate(3);
+
             _videoProcessingLibraryMock
                 .Setup(x => x.ExtractImagesAsync(videoFile))
                 .ReturnsAsync(images);

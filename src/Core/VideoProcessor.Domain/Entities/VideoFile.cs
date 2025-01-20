@@ -2,7 +2,7 @@
 {
     public record VideoFile : ProcessFile
     {
-        public VideoFile(string identifier, byte[] content) : base(identifier, content)
+        public VideoFile(string identifier, Stream fileStreamReference) : base(identifier, fileStreamReference)
         {
         }
     }

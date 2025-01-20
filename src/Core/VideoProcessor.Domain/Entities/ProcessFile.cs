@@ -2,13 +2,14 @@
 {
     public record ProcessFile
     {
-        public ProcessFile(string identifier, byte[] content)
+        public ProcessFile(string identifier, Stream fileStreamReference)
         {
             Identifier = identifier;
-            Content = content;
+            FileStreamReference = fileStreamReference;
         }
 
-        public string Identifier { get; set; }
-        public byte[] Content { get; set; }
+        public string Identifier { get; private set; }
+
+        public Stream FileStreamReference { get; private set; }
     }
 }
