@@ -5,8 +5,12 @@ using VideoProcessor.Clients.VideoManager.DependencyInjection;
 using VideoProcessor.Data.S3.DependencyInjection;
 using VideoProcessor.FFMPEG.DependencyInjection;
 using VideoProcessor.Worker.Consumers;
+using VideoProcessor.Worker.Contracts;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateSlimBuilder();
+
+builder.Services.AddHealthChecks();
+builder.WebHost.UseKestrelHttpsConfiguration();
 
 builder.Services.AddS3FileManager(builder.Configuration);
 builder.Services.AddFFMEGVideoProcessingLibrary();
@@ -26,12 +30,14 @@ builder.Services.AddMassTransit(x =>
 
         cfg.ReceiveEndpoint("videos-to-process", e =>
         {
-            e.ConcurrentMessageLimit = 2;
+            e.ConcurrentMessageLimit = 1;
             e.ConfigureConsumer<VideosToProcessConsumer>(context);
         });
     });
 });
 
-var host = builder.Build();
+var app = builder.Build();
 
-host.Run();
+app.MapHealthChecks("/health");
+
+app.Run();

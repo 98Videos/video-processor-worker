@@ -8,7 +8,7 @@ namespace VideoProcessor.FFMPEG.DependencyInjection
     {
         public static IServiceCollection AddFFMEGVideoProcessingLibrary(this IServiceCollection services)
         {
-            services.AddSingleton<IVideoProcessingLibrary, FFMPEGVideoProcessingLibrary>();
+            services.AddScoped<IVideoProcessingLibrary, FFMPEGVideoProcessingLibrary>();
 
             return services;
         }

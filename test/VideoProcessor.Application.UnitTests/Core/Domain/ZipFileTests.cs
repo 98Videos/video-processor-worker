@@ -14,6 +14,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Domain
             const string originalVideoIdentifier = "testvideo";
             var imageFiles = new AutoFaker<ImageFile>()
                 .RuleFor(x => x.OriginalVideoIdentifier, originalVideoIdentifier)
+                .RuleFor(x => x.FileStreamReference, f => new MemoryStream(f.Random.Bytes(5)))
                 .Generate(4);
 
             // Act
@@ -22,8 +23,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Domain
             // Assert
             zipFile.Identifier.Should().Be($"{originalVideoIdentifier}_thumbs.zip");
 
-            using var fileStream = new MemoryStream(zipFile.Content);
-            using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+            using var zipArchive = new ZipArchive(zipFile.FileStreamReference, ZipArchiveMode.Read);
 
             zipArchive.Entries.Count.Should().Be(imageFiles.Count);
             zipArchive.Entries

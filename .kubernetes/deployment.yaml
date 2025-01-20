@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-processor-worker-deployment
+  labels:
+    app: video-processor
+spec:
+  selector:
+    matchLabels: 
+      app: video-processor-worker
+  template:
+    metadata:
+      labels:
+        app: video-processor-worker
+    spec:
+      containers:
+        - name: c-video-processor-worker
+          image: "#{APP_IMAGE}#"
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 300
+            periodSeconds: 60
+            failureThreshold: 3
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: S3BUCKETOPTIONS__VIDEOSBUCKET
+              value: 98videos-videos-to-process
+            - name: S3BUCKETOPTIONS__ZIPFILESBUCKET
+              value: 98videos-zip-files
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef: 
+                  name: video-processor-worker-secrets
+                  key: aws-access-key-id 
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef: 
+                  name: video-processor-worker-secrets
+                  key: aws-secret-access-key 
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef: 
+                  name: video-processor-worker-secrets
+                  key: aws-session-token 
