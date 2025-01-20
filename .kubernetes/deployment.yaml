@@ -28,15 +28,15 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080 
-            initialDelaySeconds: 10
+              port: 5000
+            initialDelaySeconds: 15
             failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080 
+              port: 5000
             initialDelaySeconds: 300
-            periodSeconds: 300
+            periodSeconds: 60
             failureThreshold: 3
           env:
             - name: ASPNETCORE_ENVIRONMENT
