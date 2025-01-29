@@ -5,6 +5,7 @@ using Moq;
 using VideoProcessor.Application.UseCases;
 using VideoProcessor.Domain.Entities;
 using VideoProcessor.Domain.Ports;
+using VideoProcessor.Domain.ValueObjects;
 
 namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
 {
@@ -13,6 +14,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
         private Mock<IFileRepository> _fileRepositoryMock = new();
         private Mock<IVideoProcessingLibrary> _videoProcessingLibraryMock = new();
         private Mock<IVideoManagerClient> _videoManagerClientMock = new();
+        private Mock<IEmailSender> _emailSenderMock = new();
         private Mock<ILogger<ExtractVideoImagesToZipUseCase>> _loggerMock = new();
 
         [SetUp]
@@ -21,6 +23,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
             _fileRepositoryMock = new();
             _videoProcessingLibraryMock = new();
             _videoManagerClientMock = new();
+            _emailSenderMock = new();
             _loggerMock = new();
         }
 
@@ -48,6 +51,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
             var useCase = new ExtractVideoImagesToZipUseCase(_fileRepositoryMock.Object,
                                                              _videoProcessingLibraryMock.Object,
                                                              _videoManagerClientMock.Object,
+                                                             _emailSenderMock.Object,
                                                              _loggerMock.Object);
 
             // Act
@@ -81,6 +85,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
             var useCase = new ExtractVideoImagesToZipUseCase(_fileRepositoryMock.Object,
                                                              _videoProcessingLibraryMock.Object,
                                                              _videoManagerClientMock.Object,
+                                                             _emailSenderMock.Object,
                                                              _loggerMock.Object);
 
             // Act
@@ -112,6 +117,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
             var useCase = new ExtractVideoImagesToZipUseCase(_fileRepositoryMock.Object,
                                                              _videoProcessingLibraryMock.Object,
                                                              _videoManagerClientMock.Object,
+                                                             _emailSenderMock.Object,
                                                              _loggerMock.Object);
 
             // Act
@@ -134,7 +140,6 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
                 .Setup(x => x.GetVideoFile(userEmail, videoIdentifier))
                 .ReturnsAsync(videoFile);
 
-            var images = new AutoFaker<ImageFile>().Generate(3);
             _videoProcessingLibraryMock
                 .Setup(x => x.ExtractImagesAsync(videoFile))
                 .ThrowsAsync(new Exception("error"));
@@ -142,6 +147,7 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
             var useCase = new ExtractVideoImagesToZipUseCase(_fileRepositoryMock.Object,
                                                              _videoProcessingLibraryMock.Object,
                                                              _videoManagerClientMock.Object,
+                                                             _emailSenderMock.Object,
                                                              _loggerMock.Object);
 
             // Act
@@ -149,6 +155,42 @@ namespace VideoProcessor.Application.UnitTests.Core.Application.UseCases
 
             // Assert
             _videoManagerClientMock.Verify(x => x.NotifyProcessingFailure(videoIdentifier), Times.Once);
+        }
+
+        [Test]
+        public async Task Execute_WhenAnExceptionIsThrown_ShouldSendAnEmailToUser()
+        {
+            // Arrange
+            const string videoIdentifier = "videoTest.mp4";
+            const string userEmail = "test@test.com";
+
+            var videoFile = new AutoFaker<VideoFile>().Generate();
+
+            _fileRepositoryMock
+                .Setup(x => x.GetVideoFile(userEmail, videoIdentifier))
+                .ReturnsAsync(videoFile);
+
+            _videoProcessingLibraryMock
+                .Setup(x => x.ExtractImagesAsync(videoFile))
+                .ThrowsAsync(new Exception("error"));
+
+            var useCase = new ExtractVideoImagesToZipUseCase(_fileRepositoryMock.Object,
+                                                             _videoProcessingLibraryMock.Object,
+                                                             _videoManagerClientMock.Object,
+                                                             _emailSenderMock.Object,
+                                                             _loggerMock.Object);
+
+            // Act
+            await useCase.Execute(videoIdentifier, userEmail);
+
+            // Assert
+            _emailSenderMock.Verify(x =>
+                x.SendNotificationEmail(It.Is<NotificationEmailMessage>(email =>
+                    email.To == userEmail
+                    && email.Subject == "98 Videos Notification - Erro ao processar vídeo"
+                    && email.Body == $"Ocorreu um erro ao processar o vídeo {videoIdentifier}. Por favor entre em contato com o suporte para mais informações."
+                )),
+            Times.Once);
         }
     }
 }

@@ -3,19 +3,21 @@ using MassTransit;
 using VideoProcessor.Application.DependencyInjection;
 using VideoProcessor.Clients.VideoManager.DependencyInjection;
 using VideoProcessor.Data.S3.DependencyInjection;
+using VideoProcessor.Email.SMTP.DependencyInjection;
 using VideoProcessor.FFMPEG.DependencyInjection;
 using VideoProcessor.Worker.Consumers;
-using VideoProcessor.Worker.Contracts;
 
 var builder = WebApplication.CreateSlimBuilder();
 
 builder.Services.AddHealthChecks();
 builder.WebHost.UseKestrelHttpsConfiguration();
 
-builder.Services.AddS3FileManager(builder.Configuration);
-builder.Services.AddFFMEGVideoProcessingLibrary();
-builder.Services.AddVideoManagerClient(builder.Configuration);
-builder.Services.AddUseCases();
+builder.Services
+    .AddS3FileManager(builder.Configuration)
+    .AddFFMEGVideoProcessingLibrary()
+    .AddVideoManagerClient(builder.Configuration)
+    .AddSMTPEmailSender(builder.Configuration)
+    .AddUseCases();
 
 builder.Services.AddMassTransit(x =>
 {

@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\Core\VideoProcessor.Domain\VideoProcessor.Domain.csproj" />
     <ProjectReference Include="..\..\Drivens\VideoProcessor.Clients.VideoManager\VideoProcessor.Clients.VideoManager.csproj" />
     <ProjectReference Include="..\..\Drivens\VideoProcessor.Data.S3\VideoProcessor.Data.S3.csproj" />
+    <ProjectReference Include="..\..\Drivens\VideoProcessor.Email.SMTP\VideoProcessor.Email.SMTP.csproj" />
     <ProjectReference Include="..\..\Drivens\VideoProcessor.FFMPEG\VideoProcessor.FFMPEG.csproj" />
   </ItemGroup>
 </Project>

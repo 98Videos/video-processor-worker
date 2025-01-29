@@ -10,17 +10,20 @@ namespace VideoProcessor.Application.UseCases
         private readonly IFileRepository fileRepository;
         private readonly IVideoProcessingLibrary videoProcessingLibrary;
         private readonly IVideoManagerClient videoManagerClient;
+        private readonly IEmailSender emailSender;
         private readonly ILogger<ExtractVideoImagesToZipUseCase> logger;
 
         public ExtractVideoImagesToZipUseCase(IFileRepository fileRepository,
                                               IVideoProcessingLibrary videoProcessingLibrary,
-                                              IVideoManagerClient managerClient,
+                                              IVideoManagerClient videoManagerClient,
+                                              IEmailSender emailSender,
                                               ILogger<ExtractVideoImagesToZipUseCase> logger)
 
         {
             this.fileRepository = fileRepository;
             this.videoProcessingLibrary = videoProcessingLibrary;
-            this.videoManagerClient = managerClient;
+            this.videoManagerClient = videoManagerClient;
+            this.emailSender = emailSender;
             this.logger = logger;
         }
 
@@ -49,8 +52,13 @@ namespace VideoProcessor.Application.UseCases
                 logger.LogError(ex, errorMessage);
                 await videoManagerClient.NotifyProcessingFailure(videoIdentifier);
 
-                // TO DO
-                // send email to user with failure
+                var failureEmailMessage = new NotificationEmailMessage(
+                    recipient: userEmail,
+                    subject: "Erro ao processar vídeo",
+                    body: $"Ocorreu um erro ao processar o vídeo {videoIdentifier}. Por favor entre em contato com o suporte para mais informações."
+                );
+
+                await emailSender.SendNotificationEmail(failureEmailMessage);
 
                 return new FailureResult(errorMessage);
             }
