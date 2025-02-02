@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoProcessor.Data.S3.Adapters;
@@ -13,7 +14,7 @@ namespace VideoProcessor.Data.S3.DependencyInjection
         {
             services.Configure<S3BucketOptions>(configuration.GetSection(nameof(S3BucketOptions)));
 
-            var s3Client = new AmazonS3Client();
+            var s3Client = new AmazonS3Client(RegionEndpoint.USEast1);
 
             services.AddSingleton<IAmazonS3>(s3Client);
             services.AddScoped<IFileRepository, S3FileRepository>();

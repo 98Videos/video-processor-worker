@@ -1,0 +1,10 @@
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: ./src/Drivers/VideoProcessor.Worker/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - S3BUCKETOPTIONS__VIDEOSBUCKET=98videos-videos-to-process
+      - S3BUCKETOPTIONS__ZIPFILESBUCKET=98videos-zip-files
+      - VIDEOMANAGERCLIENTOPTIONS__HOST=http://localhost:4242
