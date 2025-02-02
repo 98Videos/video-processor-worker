@@ -12,12 +12,10 @@ namespace VideoProcessor.Clients.VideoManager.DependencyInjection
             var clientOptions = new VideoManagerClientOptions();
             config.Bind(nameof(VideoManagerClientOptions), clientOptions);
 
-            services.AddHttpClient<VideoManagerClient>(cfg =>
+            services.AddHttpClient<IVideoManagerClient, VideoManagerClient>(cfg =>
             {
-                cfg.BaseAddress = new Uri(clientOptions.Host);
+                cfg.BaseAddress = new Uri(clientOptions.Host[^1] == '/' ? clientOptions.Host : clientOptions.Host + '/');
             });
-
-            services.AddScoped<IVideoManagerClient, VideoManagerClient>();
 
             return services;
         }

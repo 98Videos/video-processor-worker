@@ -1,5 +1,8 @@
-﻿namespace VideoProcessor.Worker.Contracts
+﻿using MassTransit;
+
+namespace VideoProcessor.Worker.Contracts
 {
+    [MessageUrn("video-to-process-message")]
     public class VideoToProcessMessage
     {
         public string VideoId { get; set; }

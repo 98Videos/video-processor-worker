@@ -1,4 +1,5 @@
 using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using MassTransit;
 using VideoProcessor.Application.DependencyInjection;
 using VideoProcessor.Clients.VideoManager.DependencyInjection;
@@ -25,9 +26,16 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingAmazonSqs((context, cfg) =>
     {
+
+        var credentialChain = new CredentialProfileStoreChain();
+        if (!credentialChain.TryGetAWSCredentials("default", out AWSCredentials awsCredentials))
+        {
+            awsCredentials = new EnvironmentVariablesAWSCredentials();
+        }
+
         cfg.Host("us-east-1", h =>
         {
-            h.Credentials(new EnvironmentVariablesAWSCredentials());
+            h.Credentials(awsCredentials);
         });
 
         cfg.ReceiveEndpoint("videos-to-process", e =>
