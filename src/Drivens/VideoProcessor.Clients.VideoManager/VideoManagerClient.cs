@@ -1,4 +1,7 @@
-﻿using VideoProcessor.Domain.Enums;
+﻿using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
+using VideoProcessor.Clients.VideoManager.Contracts.Requests;
+using VideoProcessor.Domain.Enums;
 using VideoProcessor.Domain.Ports;
 
 namespace VideoProcessor.Clients.VideoManager
@@ -6,29 +9,46 @@ namespace VideoProcessor.Clients.VideoManager
     public class VideoManagerClient : IVideoManagerClient
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<VideoManagerClient> logger;
 
-        public VideoManagerClient(HttpClient httpClient)
+        public VideoManagerClient(HttpClient httpClient, ILogger<VideoManagerClient> logger)
         {
             this.httpClient = httpClient;
+            this.logger = logger;
         }
 
         public async Task NotifyProcessingFailure(string videoIdentifier)
         {
-            var newStatus = VideoProcessingStatus.Success;
+            var newStatus = VideoStatus.Falha;
             await CallServiceWithNewStatus(videoIdentifier, newStatus);
         }
 
         public async Task NotifyProcessingSuccess(string videoIdentifier)
         {
-            var newStatus = VideoProcessingStatus.Success;
+            var newStatus = VideoStatus.Processado;
             await CallServiceWithNewStatus(videoIdentifier, newStatus);
         }
 
-        private Task CallServiceWithNewStatus(string videoIdentifier, VideoProcessingStatus newStatus)
+        private async Task CallServiceWithNewStatus(string videoIdentifier, VideoStatus newStatus)
         {
-            // TODO: Call service when endpoint is implemented
+            try
+            {
+                var request = new UpdateVideoRequest()
+                {
+                    Status = newStatus
+                };
 
-            return Task.CompletedTask;
+                logger.LogInformation("notifying media manager of new video status {newStatus} on video {videoIdentifier}", newStatus, videoIdentifier);
+                var resp = await httpClient.PutAsJsonAsync($"api/videos/{videoIdentifier}/status", request);
+                resp.EnsureSuccessStatusCode();
+
+                logger.LogInformation("successfully updated {videoIdentifier} status!", videoIdentifier);
+            }
+            catch (HttpRequestException e)
+            {
+                logger.LogError(e, "error updateding {videoIdentifier} status! Status code was {statusCode}.", videoIdentifier, e.StatusCode);
+                throw;
+            }
         }
     }
 }
