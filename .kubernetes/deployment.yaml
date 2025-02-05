@@ -28,23 +28,38 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: 5000
-            initialDelaySeconds: 15
+              port: 8080
+            initialDelaySeconds: 25
             failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /health
-              port: 5000
-            initialDelaySeconds: 300
+              port: 8080
+            initialDelaySeconds: 60
             periodSeconds: 60
             failureThreshold: 3
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
-            - name: S3BUCKETOPTIONS__VIDEOSBUCKET
-              value: 98videos-videos-to-process
-            - name: S3BUCKETOPTIONS__ZIPFILESBUCKET
-              value: 98videos-zip-files
+            - name: S3BucketOptions__VideosBucket
+              value: "#{VIDEOS_BUCKET_NAME}#"
+            - name: S3BucketOptions__ZipFilesBucket
+              value: "#{ZIPFILES_BUCKET_NAME}#"
+            - name: VideoManagerClientOptions__Host
+              value: "#{MEDIA_MANAGER_HOST}#"
+            - name: SMTPSenderOptions__Host
+              value: "#{SMTP_HOST}#"
+            - name: SMTPSenderOptions__Port
+              value: "#{SMTP_PORT}#"
+            - name: SMTPSenderOptions__User
+              value: "#{SMTP_USER}#"
+            - name: SMTPSenderOptions__FromEmail
+              value: "#{SMTP_FROM_EMAIL}#"
+            - name: SMTPSenderOptions__Password
+              valueFrom:
+                secretKeyRef: 
+                  name: video-processor-worker-secrets
+                  key: smtp-password
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef: 
