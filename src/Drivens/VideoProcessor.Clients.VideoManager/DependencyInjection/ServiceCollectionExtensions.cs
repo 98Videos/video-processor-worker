@@ -15,6 +15,7 @@ namespace VideoProcessor.Clients.VideoManager.DependencyInjection
             services.AddHttpClient<IVideoManagerClient, VideoManagerClient>(cfg =>
             {
                 cfg.BaseAddress = new Uri(clientOptions.Host[^1] == '/' ? clientOptions.Host : clientOptions.Host + '/');
+                cfg.DefaultRequestHeaders.Add("x-api-key", clientOptions.ApiKey);
             });
 
             return services;

@@ -31,24 +31,16 @@ namespace VideoProcessor.Clients.VideoManager
 
         private async Task CallServiceWithNewStatus(string videoIdentifier, VideoStatus newStatus)
         {
-            try
+            var request = new UpdateVideoRequest()
             {
-                var request = new UpdateVideoRequest()
-                {
-                    Status = newStatus
-                };
+                Status = newStatus
+            };
 
-                logger.LogInformation("notifying media manager of new video status {newStatus} on video {videoIdentifier}", newStatus, videoIdentifier);
-                var resp = await httpClient.PutAsJsonAsync($"api/videos/{videoIdentifier}/status", request);
-                resp.EnsureSuccessStatusCode();
+            logger.LogInformation("notifying media manager of new video status {newStatus} on video {videoIdentifier}", newStatus, videoIdentifier);
+            var resp = await httpClient.PutAsJsonAsync($"api/videos/{videoIdentifier}/status", request);
+            resp.EnsureSuccessStatusCode();
 
-                logger.LogInformation("successfully updated {videoIdentifier} status!", videoIdentifier);
-            }
-            catch (HttpRequestException e)
-            {
-                logger.LogError(e, "error updateding {videoIdentifier} status! Status code was {statusCode}.", videoIdentifier, e.StatusCode);
-                throw;
-            }
+            logger.LogInformation("successfully updated {videoIdentifier} status!", videoIdentifier);
         }
     }
 }

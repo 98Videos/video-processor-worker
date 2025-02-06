@@ -4,5 +4,6 @@ namespace VideoProcessor.Clients.VideoManager.Options
     public class VideoManagerClientOptions
     {
         public string Host { get; set; }
+        public string ApiKey { get; set; }
     }
 }
