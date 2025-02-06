@@ -68,6 +68,7 @@ jobs:
         SMTP_FROM_EMAIL: ${{ vars.SMTP_FROM_EMAIL }}
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         MEDIA_MANAGER_HOST: ${{ vars.MEDIA_MANAGER_HOST }}
+        MEDIA_MANAGER_API_KEY: ${{ secrets.MEDIA_MANAGER_API_KEY }}
         
     - name: AWS Cli login
       uses: aws-actions/configure-aws-credentials@v1

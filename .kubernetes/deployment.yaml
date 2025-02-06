@@ -60,6 +60,11 @@ spec:
                 secretKeyRef: 
                   name: video-processor-worker-secrets
                   key: smtp-password
+            - name: VideoManagerClientOptions__ApiKey
+              valueFrom:
+                secretKeyRef: 
+                  name: video-processor-worker-secrets
+                  key: media-manager-api-key
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef: 
