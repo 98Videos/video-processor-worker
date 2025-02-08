@@ -41,25 +41,16 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
+            - name: ConsumerOptions__QueueName
+              value: "#{SQS_VIDEOS_TO_PROCESS_QUEUE}#"
+            - name: ConsumerOptions__ConcurrentMessageLimit
+              value: "#{CONSUMER_CONCURRENT_MESSAGE_LIMIT}#"
             - name: S3BucketOptions__VideosBucket
               value: "#{VIDEOS_BUCKET_NAME}#"
             - name: S3BucketOptions__ZipFilesBucket
               value: "#{ZIPFILES_BUCKET_NAME}#"
             - name: VideoManagerClientOptions__Host
               value: "#{MEDIA_MANAGER_HOST}#"
-            - name: SMTPSenderOptions__Host
-              value: "#{SMTP_HOST}#"
-            - name: SMTPSenderOptions__Port
-              value: "#{SMTP_PORT}#"
-            - name: SMTPSenderOptions__User
-              value: "#{SMTP_USER}#"
-            - name: SMTPSenderOptions__FromEmail
-              value: "#{SMTP_FROM_EMAIL}#"
-            - name: SMTPSenderOptions__Password
-              valueFrom:
-                secretKeyRef: 
-                  name: video-processor-worker-secrets
-                  key: smtp-password
             - name: VideoManagerClientOptions__ApiKey
               valueFrom:
                 secretKeyRef: 

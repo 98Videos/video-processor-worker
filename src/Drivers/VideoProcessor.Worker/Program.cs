@@ -1,52 +1,30 @@
-using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
-using MassTransit;
+using Serilog;
 using VideoProcessor.Application.DependencyInjection;
 using VideoProcessor.Clients.VideoManager.DependencyInjection;
 using VideoProcessor.Data.S3.DependencyInjection;
-using VideoProcessor.Email.SMTP.DependencyInjection;
 using VideoProcessor.FFMPEG.DependencyInjection;
-using VideoProcessor.Worker.Consumers;
+using VideoProcessor.Worker.DependencyInjection;
 
 var builder = WebApplication.CreateSlimBuilder();
 
-builder.Services.AddHealthChecks();
+var config = builder.Configuration;
+var services = builder.Services;
+
 builder.WebHost.UseKestrelHttpsConfiguration();
 
-builder.Services
-    .AddS3FileManager(builder.Configuration)
+services.AddHealthChecks();
+
+services
+    .ConfigureLogging()
+    .AddSQSMessageConsumer(config)
+    .AddS3FileManager(config)
     .AddFFMEGVideoProcessingLibrary()
-    .AddVideoManagerClient(builder.Configuration)
-    .AddSMTPEmailSender(builder.Configuration)
+    .AddVideoManagerClient(config)
     .AddUseCases();
 
-builder.Services.AddMassTransit(x =>
-{
-    x.AddConsumer<VideosToProcessConsumer>();
-
-    x.UsingAmazonSqs((context, cfg) =>
-    {
-
-        var credentialChain = new CredentialProfileStoreChain();
-        if (!credentialChain.TryGetAWSCredentials("default", out AWSCredentials awsCredentials))
-        {
-            awsCredentials = new EnvironmentVariablesAWSCredentials();
-        }
-
-        cfg.Host("us-east-1", h =>
-        {
-            h.Credentials(awsCredentials);
-        });
-
-        cfg.ReceiveEndpoint("videos-to-process", e =>
-        {
-            e.ConcurrentMessageLimit = 1;
-            e.ConfigureConsumer<VideosToProcessConsumer>(context);
-        });
-    });
-});
-
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 app.MapHealthChecks("/health");
 
