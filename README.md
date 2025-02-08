@@ -1,6 +1,6 @@
 # Video Processor
 
-Microsserviço responsável pelo processamento assíncrono de videos. Reponsável por monitorar a fila de videos aguardando processamento e realizar a extração de imagens dos videos, comprimindo-as em um arquivo zip e publicando em um repositório de arquivos para download posterior.
+Microsserviço responsável pelo processamento assíncrono de videos. Reponsável por monitorar a fila de videos aguardando processamento e realizar a extração de imagens dos videos, comprimindo-as em um arquivo zip e publicando em um repositório de arquivos para download.
 
 # Funcionalidades
 - Extração de imagens de arquivos de video.
@@ -11,11 +11,11 @@ Microsserviço responsável pelo processamento assíncrono de videos. Reponsáve
 - MassTransit
 - S3
 - XUnit
-- SNS
+- lib FFMPEG
 
 # Arquitetura 
 O Serviço é um worker que fica escutando uma fila de videos aguardando processamento. Foi construído utilizando arquitetura hexagonal para organização interna. Utiliza a lib [FFmpeg](https://www.ffmpeg.org/) para o processamento dos videos.
-A aplicação integra com a video-manager para notificação de quando os videos são processados. Também utiliza o SNS para enviar e-mails ao usuário no caso de falha no processamento dos vídeos. A aplicação é pronta para publicação em um cluster Kubernetes, permitindo assim o processamento de vários videos simultaneamente.
+A aplicação integra com a video-manager para notificação de quando os videos são processados. A aplicação é pronta para publicação em um cluster Kubernetes, permitindo assim o processamento de vários videos simultaneamente.
 
 ![Arquitetura](docs/imgs/video-processor-arch.jpg)
 
