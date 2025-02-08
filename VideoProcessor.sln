@@ -37,7 +37,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".kubernetes", ".kubernetes"
 		.kubernetes\deployment.yaml = .kubernetes\deployment.yaml
 		.kubernetes\hpa.yaml = .kubernetes\hpa.yaml
 		.kubernetes\secrets.yaml = .kubernetes\secrets.yaml
-		.kubernetes\service.yaml = .kubernetes\service.yaml
 	EndProjectSection
 EndProject
 Global
