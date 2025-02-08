@@ -41,6 +41,10 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
+            - name: ConsumerOptions__QueueName
+              value: videos-to-process
+            - name: ConsumerOptions__ConcurrentMessageLimit
+              value: '3'
             - name: S3BucketOptions__VideosBucket
               value: "#{VIDEOS_BUCKET_NAME}#"
             - name: S3BucketOptions__ZipFilesBucket
