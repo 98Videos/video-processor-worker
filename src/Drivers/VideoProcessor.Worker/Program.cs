@@ -2,7 +2,6 @@ using Serilog;
 using VideoProcessor.Application.DependencyInjection;
 using VideoProcessor.Clients.VideoManager.DependencyInjection;
 using VideoProcessor.Data.S3.DependencyInjection;
-using VideoProcessor.Email.SMTP.DependencyInjection;
 using VideoProcessor.FFMPEG.DependencyInjection;
 using VideoProcessor.Worker.DependencyInjection;
 
@@ -21,7 +20,6 @@ services
     .AddS3FileManager(config)
     .AddFFMEGVideoProcessingLibrary()
     .AddVideoManagerClient(config)
-    .AddSMTPEmailSender(config)
     .AddUseCases();
 
 var app = builder.Build();

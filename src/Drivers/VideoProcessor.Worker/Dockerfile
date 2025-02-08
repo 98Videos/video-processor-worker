@@ -23,7 +23,6 @@ COPY ["src/Core/VideoProcessor.Domain/VideoProcessor.Domain.csproj", "Core/Video
 COPY ["src/Drivens/VideoProcessor.Clients.VideoManager/VideoProcessor.Clients.VideoManager.csproj", "Drivens/VideoProcessor.Clients.VideoManager/"]
 COPY ["src/Drivens/VideoProcessor.Data.S3/VideoProcessor.Data.S3.csproj", "Drivens/VideoProcessor.Data.S3/"]
 COPY ["src/Drivens/VideoProcessor.FFMPEG/VideoProcessor.FFMPEG.csproj", "Drivens/VideoProcessor.FFMPEG/"]
-COPY ["src/Drivens/VideoProcessor.Email.SMTP/VideoProcessor.Email.SMTP.csproj", "Drivens/VideoProcessor.Email.SMTP/"]
 RUN dotnet restore "./Drivers/VideoProcessor.Worker/VideoProcessor.Worker.csproj"
 
 COPY ./src .
