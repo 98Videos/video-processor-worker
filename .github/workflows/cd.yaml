@@ -59,14 +59,10 @@ jobs:
         VIDEOS_BUCKET_NAME: ${{ vars.VIDEOS_BUCKET_NAME }}
         ZIPFILES_BUCKET_NAME: ${{ vars.ZIPFILES_BUCKET_NAME }}
         SQS_VIDEOS_TO_PROCESS_QUEUE: ${{ vars.SQS_VIDEOS_TO_PROCESS_QUEUE }}
+        CONSUMER_CONCURRENT_MESSAGE_LIMIT: ${{ vars.CONSUMER_CONCURRENT_MESSAGE_LIMIT }}
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
         AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
-        SMTP_HOST: ${{ vars.SMTP_HOST }}
-        SMTP_PORT: ${{ vars.SMTP_PORT }}
-        SMTP_USER: ${{ vars.SMTP_USER }}
-        SMTP_FROM_EMAIL: ${{ vars.SMTP_FROM_EMAIL }}
-        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         MEDIA_MANAGER_HOST: ${{ vars.MEDIA_MANAGER_HOST }}
         MEDIA_MANAGER_API_KEY: ${{ secrets.MEDIA_MANAGER_API_KEY }}
         
@@ -86,5 +82,4 @@ jobs:
       run: |
         kubectl apply -f ./.kubernetes/secrets.yaml
         kubectl apply -f ./.kubernetes/deployment.yaml
-        kubectl apply -f ./.kubernetes/service.yaml
         kubectl apply -f ./.kubernetes/hpa.yaml
