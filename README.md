@@ -1,6 +1,6 @@
 # Video Processor
 
-Microsserviço responsável pelo processamento assíncrono de videos. Reponsável por monitorar a fila de videos aguardando processamento e realizar a extração de imagens dos videos, comprimindo-as em um arquivo zip e publicando em um repositório de arquivos para download.
+Microsserviço responsável pelo processamento assíncrono de videos. Reponsável por monitorar a fila de videos aguardando processamento e realizar a extração de imagens dos vídeos, comprimindo-as em um arquivo zip e publicando em um repositório de arquivos para download.
 
 # Funcionalidades
 - Extração de imagens de arquivos de video.
